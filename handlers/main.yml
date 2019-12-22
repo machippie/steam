@@ -1,0 +1,16 @@
+# Standards: 0.1
+---
+- name: Kill steam
+  command: killall Steam
+  register: steam_kill
+  failed_when: steam_kill.rc != 0 and "No matching processes belonging to you were found" not in steam_kill.stderr
+  become: "{{ (steam_user != ansible_user_id) | bool }}"
+  become_user: "{{ steam_user }}"
+
+- name: Start steam
+  when: steam_started
+  command: open -g /Applications/Steam.app
+  become: "{{ (steam_user != ansible_user_id) | bool }}"
+  become_user: "{{ steam_user }}"
+
+...
