@@ -6,12 +6,6 @@
   tags:
     - steam
 
-- name: Install psutil package
-  pip:
-    name: psutil
-  tags:
-    - steam
-
 - become: "{{ (steam_user != ansible_user_id) | bool }}"
   become_user: "{{ steam_user }}"
   block:
@@ -34,16 +28,24 @@
       tags:
         - steam
 
+    - name: Install pidof package
+      homebrew:
+        name: pidof
+      tags:
+        - steam
+
     - name: Check program running
       register: steam_running
-      pids:
-        name: Steam
+      check_mode: False
+      failed_when: False
+      changed_when: steam_running.stdout | length > 0 | bool
+      command: pidof Steam
       tags:
         - steam
 
     - name: Fact program running
       set_fact:
-        steam_started: "{{ steam_running.pids | length > 0 }}}"
+        steam_started: "{{ steam_running.stdout_lines | length > 0 | bool }}"
       tags:
         - steam
 
