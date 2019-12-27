@@ -1,0 +1,10 @@
+# Standards: 0.1
+---
+# @var steam_user:description: User to run user-specific commands
+# @var steam_user:value: steam_user | default(homebrew_user) | default(ansible_user_id)
+# steam_user:
+
+# @var steam_started:description: Start in background after install
+steam_started: True
+
+...
